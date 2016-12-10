@@ -1,1 +1,3 @@
-console.log(PIXI)
+$(document).ready(function() {
+    alert(PIXI)
+})
