@@ -1,5 +1,7 @@
 "use strict"
 
+var SERVER_FPS = 30;
+
 var express = require("express");
 var app = express();
 var http = require("http").Server(app);
@@ -35,15 +37,15 @@ io.on("connection", function(socket) {
     });
 
     // Update the player heading when the mouse is moved.
-    socket.on("heading", function(newHeading) {
-        if (newHeading > Math.PI * 2) {
-            newHeading = Math.PI * 2;
-        } else if (newHeading < Math.PI * -2) {
-            newHeading = Math.PI * -2;
+    socket.on("turn", function(newHeading) {
+        if (newHeading > 360) {
+            newHeading = 360;
+        } else if (newHeading < 0) {
+            newHeading = 360;
         }
 
         player.heading = newHeading;
-        io.emit("heading", id, newHeading);
+        io.emit("turn", id, newHeading);
     });
 
     // Network existing players to the player.
