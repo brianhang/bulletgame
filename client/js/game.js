@@ -12,6 +12,7 @@ $(document).ready(function() {
 	requestAnimationFrame(render);
 })
 
+// Sets up background and the stage
 function initialize() {
 	// Create the renderer
 	renderer = new PIXI.WebGLRenderer(512, 512);
@@ -52,7 +53,7 @@ $(document).mousemove(function(event) {
 		var angle = Math.atan2(event.pageY - player.sprite.position.y, 
 							   event.pageX - player.sprite.position.x);
 
-		// Send heading information to server
+		// Send heading information to serverA
 		socket.emit("turn", angle); 
 	}
 });
@@ -80,8 +81,8 @@ socket.on("join", function(data, isLocalPlayer) {
 	client.sprite = PIXI.Sprite.fromImage("assets/images/ship.png");
 	
 	// Set coordinates
-	client.sprite.position.x = data.x;
-	client.sprite.position.y = data.y;
+	client.sprite.x = data.x;
+	client.sprite.y = data.y;
 	client.sprite.rotation = client.heading;
 
 	// Put sprite is in middle of position
@@ -93,7 +94,7 @@ socket.on("join", function(data, isLocalPlayer) {
 
 // Called when a player leaves the game
 socket.on("leave", function(id) {
-	// Delete player's sprite
+	// Delete player's sprite and the player itself
 	stage.removeChild(players[id].sprite);
 	delete players[id];
 })
