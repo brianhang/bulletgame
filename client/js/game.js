@@ -56,7 +56,7 @@ $(document).mousemove(function(event) {
 							   player.sprite.position.x - event.pageX);
 
 		// Send heading information to serverA
-		socket.volatile.emit("turn", angle); 
+		socket.emit("turn", angle); 
 	}
 });
 
