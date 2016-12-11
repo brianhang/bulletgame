@@ -35,18 +35,15 @@ function initialize() {
 	window.addEventListener("resize", function(event){
 		renderer.resize($(document).width(), $(document).height());
 	});
-
-	// Load Assets into texture cache
-	PIXI.loader
-		.add("assets/images/ship.png")
-		.add("assets/images/bullet.png");
 }
 
+// Call when a frame needs to be rendered
 function render() {
 	requestAnimationFrame(render);
 	renderer.render(stage);
 }
 
+// Called when a player joins a game
 socket.on("join", function(data, isLocalPlayer) {
 	var client;
 
@@ -64,13 +61,14 @@ socket.on("join", function(data, isLocalPlayer) {
 
 	players[client.id] = client;
 
-	// Set up the graphics for the player.
-	var shipSprite = new PIXI.Sprite(
-		PIXI.loader.resources["assets/images/ship.png"].texture
-	);
+	// Load ship textures
+	client.sprite = PIXI.Sprite.fromImage("assets/images/ship.png");
+	// Set coordinates
+	client.sprite.position.x = client.x;
+	client.sprite.position.y = client.y;
 
-	client.sprite = shipSprite;
-	stage.addChild(shipSprite);
+
+	stage.addChild(client.sprite);
 });
 
 socket.on("leave", function(id) {
