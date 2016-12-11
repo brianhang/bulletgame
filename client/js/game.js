@@ -1,3 +1,5 @@
+var TO_RADIANS = (180 / Math.PI)
+
 var socket = io();
 
 var player = new Player(-1, 0, 0);
@@ -50,8 +52,8 @@ $(document).mousemove(function(event) {
 	if (player.sprite !== undefined) {
 
 		// Get the angle of mouse from the sprite	
-		var angle = Math.atan2(event.pageY - player.sprite.position.y, 
-							   event.pageX - player.sprite.position.x);
+		var angle = Math.atan2(player.sprite.position.y - event.pageY, 
+							   player.sprite.position.x - event.pageX);
 
 		// Send heading information to serverA
 		socket.emit("turn", angle); 
@@ -104,15 +106,16 @@ socket.on("move", function(id, x, y) {
 	var other = players[id];
 	other.x = data.x;
 	other.y = data.y;
-
-	stage.addChild(other.sprite);
 })
+var i = -Math.PI;
 
 // Called when a player changes angles
 socket.on("turn", function(id, angle) {
 	var other = players[id];
-	other.heading = data.heading;
 
-	stage.addChild(other.sprite);
-
+	// Move the given player to the given angle.
+	if (other !== undefined) {
+		other.heading = angle;
+		other.sprite.rotation = angle - Math.PI / 2;
+	}
 })

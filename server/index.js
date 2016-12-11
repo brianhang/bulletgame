@@ -8,6 +8,8 @@ var http = require("http").Server(app);
 var io = require("socket.io")(http);
 var Player = require("../shared/player").Player;
 
+var TWO_PI = Math.PI * 2
+
 // Start the webserver for the game on localhost:8080
 app.use(express.static(__dirname + "/../client"))
 http.listen(8080)
@@ -38,10 +40,10 @@ io.on("connection", function(socket) {
 
     // Update the player heading when the mouse is moved.
     socket.on("turn", function(newHeading) {
-        if (newHeading > 360) {
-            newHeading = 360;
-        } else if (newHeading < 0) {
-            newHeading = 360;
+        if (newHeading > Math.PI) {
+            newHeading = Math.PI;
+        } else if (newHeading < -Math.PI) {
+            newHeading = -Math.PI;
         }
 
         player.heading = newHeading;
