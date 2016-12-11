@@ -11,6 +11,8 @@ var renderer;
 $(document).ready(function() {
 	initialize();
 
+	$(document).keydown(onKeyDown);
+	$(document).keyup(onKeyUp);
 	requestAnimationFrame(render);
 })
 
@@ -44,6 +46,27 @@ function initialize() {
 function render() {
 	requestAnimationFrame(render);
 	renderer.render(stage);
+}
+
+// Called when a keyboard button is being held down.
+function onKeyDown(keyEvent) {
+	if (player.sprite !== undefined && keyEvent.which === 32 &&
+		!player.increaseThrust) {
+		socket.emit("thrust", true);
+		player.increaseThrust = true;
+	}
+
+	keyEvent.preventDefault();
+}
+
+function onKeyUp(keyEvent) {
+	if (player.sprite !== undefined && keyEvent.which === 32 &&
+		player.increaseThrust) {
+		socket.emit("thrust");
+		player.increaseThrust = false;
+	}
+
+	keyEvent.preventDefault();
 }
 
 // Called when mouse is moved

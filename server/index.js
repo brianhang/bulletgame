@@ -50,6 +50,16 @@ io.on("connection", function(socket) {
         io.volatile.emit("turn", id, newHeading);
     });
 
+    // Called when the player wants to change their thrust.
+    socket.on("thrust", function(shouldIncrease) {
+        if (shouldIncrease) {
+            player.increaseThrust = true;
+        } else {
+            player.increaseThrust = false;
+        }
+        console.log(player.increaseThrust);
+    })
+
     // Network existing players to the player.
     players.forEach(function(client) {
         var playerData = {
