@@ -47,7 +47,7 @@ io.on("connection", function(socket) {
         }
 
         player.heading = newHeading;
-        io.emit("turn", id, newHeading);
+        io.volatile.emit("turn", id, newHeading);
     });
 
     // Network existing players to the player.
