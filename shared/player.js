@@ -1,3 +1,5 @@
+"use strict"
+
 /**
  * The Player class is a player within the game. It contains simple information
  * such as position, speed, and heading.
@@ -37,4 +39,13 @@ class Player {
         this.x += cos(heading) * thrust;
         this.y += sin(heading) * thrust;
     }
+
+    /**
+     * Returns whether or nor two player instances are the same.
+     */
+    equals(other) {
+        return other.id === this.id;
+    }
 }
+
+exports.Player = Player
