@@ -43,6 +43,8 @@ function initialize() {
     });
 }
 
+var elapsed = Date.now();
+
 // Call when a frame needs to be rendered
 function render() {
     requestAnimationFrame(render);
@@ -55,11 +57,11 @@ function render() {
         player.sprite.x = player.deltaX;
         player.sprite.y = player.deltaY;
         player.sprite.rotation = player.deltaHeading - Math.PI/2;
-    });
 
-    var now = Date.now();
-    emitter.update((now - elapsed) * 0.001);
-    elapsed = now;
+        var now = Date.now();
+        player.thrustParticles.update((now - elapsed) * 0.001);
+        elapsed = now;
+    });
 
     renderer.render(stage);
 }
@@ -131,7 +133,6 @@ socket.on("join", function(data, isLocalPlayer) {
     client.sprite = PIXI.Sprite.fromImage("assets/images/ship.png");
     
     client.thrustParticles = new PIXI.particles.Emitter(
- 
     	[PIXI.Texture.fromImage("assets/images/bullet.png")],
 
 	    {
@@ -180,7 +181,6 @@ socket.on("join", function(data, isLocalPlayer) {
     	}
 	);
 
-	var elapsed = Date.now();
 	client.thrustParticles.emit = true;
 
 
