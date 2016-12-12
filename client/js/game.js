@@ -125,7 +125,7 @@ socket.on("join", function(data, isLocalPlayer) {
     client.y = data.y;
     client.deltaX = client.x;
     client.deltaY = client.y;
-    client.heading = 0//Math.random()*360//data.heading || 0;
+    client.heading = data.heading || 0;
     client.deltaHeading = client.heading; 
     client.thrust = data.thrust || 0;
 
@@ -135,10 +135,16 @@ socket.on("join", function(data, isLocalPlayer) {
     // Load ship textures
     client.sprite = PIXI.Sprite.fromImage("assets/images/ship.png");
     
-    client.thrustParticles = new PIXI.particles.Emitter(
-    	
-    	stage,
+    var startColor = "fb1010";
+    var endColor = "f5b830";
 
+    if (isLocalPlayer) {
+        startColor = "59abe3";
+        endColor = "81cfe0";
+    }
+
+    client.thrustParticles = new PIXI.particles.Emitter(
+    	stage,
     	[PIXI.Texture.fromImage("assets/images/bullet.png")],
 
 	    {
@@ -151,8 +157,8 @@ socket.on("join", function(data, isLocalPlayer) {
 	            end: 0.2
 	        },
 	        color: {
-	            start: "fb1010",
-	            end: "f5b830"
+	            start: startColor,
+	            end: endColor
 	        },
 	        speed: {
 	            start: 0,
@@ -205,6 +211,8 @@ socket.on("join", function(data, isLocalPlayer) {
 socket.on("leave", function(id) {
     // Delete player's sprite and the player itself
     stage.removeChild(players[id].sprite);
+    players[id].thrustParticles.destroy();
+    
     delete players[id];
 })
 
