@@ -54,9 +54,9 @@ function onKeyDown(keyEvent) {
 		!player.increaseThrust) {
 		socket.emit("thrust", true);
 		player.increaseThrust = true;
-	}
 
-	keyEvent.preventDefault();
+		keyEvent.preventDefault();
+	}
 }
 
 function onKeyUp(keyEvent) {
@@ -64,9 +64,9 @@ function onKeyUp(keyEvent) {
 		player.increaseThrust) {
 		socket.emit("thrust");
 		player.increaseThrust = false;
-	}
 
-	keyEvent.preventDefault();
+		keyEvent.preventDefault();
+	}
 }
 
 // Called when mouse is moved
@@ -127,10 +127,17 @@ socket.on("leave", function(id) {
 // Called when a player changes position
 socket.on("move", function(id, x, y) {
 	var other = players[id];
-	other.x = data.x;
-	other.y = data.y;
+
+	if (other === undefined) {
+		return;
+	}
+
+	other.x = x;
+	other.y = y;
+
+	other.sprite.x = other.x;
+	other.sprite.y = other.y;
 })
-var i = -Math.PI;
 
 // Called when a player changes angles
 socket.on("turn", function(id, angle) {

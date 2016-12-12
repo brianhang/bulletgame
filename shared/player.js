@@ -31,13 +31,26 @@ class Player {
 
     /**
      * Moves the ship by one step forward in the game.
+     *
+     * @return True if the position changed, false otherwise.
      */
     update() {
-        var heading = getHeading();
-        var thrust = getThrust();
+        var heading = this.getHeading();
+        var thrust = this.getThrust();
 
-        this.x += cos(heading) * thrust;
-        this.y += sin(heading) * thrust;
+        // Move the player in the heading direction.
+        this.x += Math.cos(heading) * -thrust;
+        this.y += Math.sin(heading) * -thrust;
+
+        // Return if the new position matches the last position.
+        if (this.x == this.lastX && this.y == this.lastY) {
+            return false;
+        } else {
+            this.lastX = this.x;
+            this.lastY = this.y;
+
+            return true;
+        }
     }
 
     /**

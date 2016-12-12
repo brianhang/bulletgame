@@ -1,6 +1,6 @@
 "use strict"
 
-var SERVER_FPS = 30;
+var SERVER_FPS = 10;
 
 var express = require("express");
 var app = express();
@@ -9,6 +9,10 @@ var io = require("socket.io")(http);
 var Player = require("../shared/player").Player;
 
 var TWO_PI = Math.PI * 2
+
+var THRUST_MAX = 10
+var THRUST_STEP_UP = 0.25
+var THRUST_STEP_DOWN = 0.1
 
 // Start the webserver for the game on localhost:8080
 app.use(express.static(__dirname + "/../client"))
@@ -57,11 +61,10 @@ io.on("connection", function(socket) {
         } else {
             player.increaseThrust = false;
         }
-        console.log(player.increaseThrust);
     })
 
     // Network existing players to the player.
-    players.forEach(function(client) {
+    players.map(function(client) {
         var playerData = {
             "id": player.id,
             "x": player.x,
@@ -85,3 +88,23 @@ io.on("connection", function(socket) {
 
     console.log("Player " + id + " has joined the game.");
 });
+
+function update() {
+    players.map(function(player) {
+        var thrust = player.getThrust();
+
+        if (player.increaseThrust && thrust < THRUST_MAX) {
+            player.thrust = Math.min(thrust + THRUST_STEP_UP, THRUST_MAX);
+        } else if (!player.increaseThrust && thrust > 0) {
+            player.thrust = Math.max(thrust - THRUST_STEP_DOWN, 0);
+        }
+
+        if (player.update()) {
+            io.emit("move", player.id, player.x, player.y);
+        }
+    });
+
+    setTimeout(update, 1000 / SERVER_FPS);
+}
+
+update();
