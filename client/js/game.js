@@ -147,7 +147,7 @@ socket.on("join", function(data, isLocalPlayer) {
 	            end: 0
 	        },
 	        scale: {
-	            start: 1,
+	            start: 1.5,
 	            end: 0.2
 	        },
 	        color: {
@@ -170,14 +170,13 @@ socket.on("join", function(data, isLocalPlayer) {
 	            min: 1,
 	            max: 1.5
 	        },
-	        frequency: 0.02,
-	        emitterLifetime: 0,
-	        maxParticles: 1000,
+	        frequency: 0.075,
+	        maxParticles: 50,
 	        pos: {
 	            x: client.x,
 	            y: client.y
 	        },
-	        addAtBack: false,
+	        addAtBack: true,
 	        spawnType: "circle",
 	        spawnCircle: {
 	            x: 0,
