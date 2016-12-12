@@ -130,7 +130,7 @@ socket.on("join", function(data, isLocalPlayer) {
     // Load ship textures
     client.sprite = PIXI.Sprite.fromImage("assets/images/ship.png");
     
-    var client.thrustParticles = new PIXI.particles.Emitter(
+    client.thrustParticles = new PIXI.particles.Emitter(
  
     	[PIXI.Texture.fromImage("assets/images/bullet.png")],
 
