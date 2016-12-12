@@ -49,6 +49,7 @@ var elapsed = Date.now();
 // Call when a frame needs to be rendered
 function render() {
     requestAnimationFrame(render);
+    var now = Date.now();
 
     players.map(function(player) {
         player.deltaX += (player.x - player.deltaX) * 0.16;
@@ -59,12 +60,11 @@ function render() {
         player.sprite.y = player.deltaY;
         player.sprite.rotation = player.heading - Math.PI/2;
 
-        var now = Date.now();
         player.thrustParticles.updateSpawnPos(player.deltaX, player.deltaY);
-        player.thrustParticles.rotate(player.sprite.rotation*TO_DEGREE);
         player.thrustParticles.update((now - elapsed) * 0.001);
-        elapsed = now;
     });
+
+    elapsed = now;
 
     renderer.render(stage);
 }
@@ -144,18 +144,18 @@ socket.on("join", function(data, isLocalPlayer) {
 	    {
 	        alpha: {
 	            start: 1.0,
-	            end: 0.1
+	            end: 0
 	        },
 	        scale: {
 	            start: 1,
-	            end: 0.3
+	            end: 0.2
 	        },
 	        color: {
 	            start: "fb1010",
 	            end: "f5b830"
 	        },
 	        speed: {
-	            start: 200,
+	            start: 0,
 	            end: 0
 	        },
 	        startRotation: {
@@ -164,11 +164,11 @@ socket.on("join", function(data, isLocalPlayer) {
 	        },
 	        rotationSpeed: {
 	            min: 0,
-	            max: 0
+	            max: 360
 	        },
 	        lifetime: {
 	            min: 1,
-	            max: 1
+	            max: 1.5
 	        },
 	        frequency: 0.02,
 	        emitterLifetime: 0,
@@ -199,7 +199,7 @@ socket.on("join", function(data, isLocalPlayer) {
     client.sprite.anchor.set(0.5, 0.5);
 
 
-    stage.addChild(client.sprite);
+    stage.addChildAt(client.sprite);
 });
 
 // Called when a player leaves the game
