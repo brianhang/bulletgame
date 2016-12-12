@@ -1,5 +1,6 @@
-var TO_RADIANS = (180 / Math.PI)
-var ANGLE_STEP = Math.PI / 10
+var TO_RADIANS = (180 / Math.PI);
+var TO_DEGREE = (180 / Math.PI);
+var ANGLE_STEP = Math.PI / 10;
 
 var socket = io();
 
@@ -56,9 +57,11 @@ function render() {
 
         player.sprite.x = player.deltaX;
         player.sprite.y = player.deltaY;
-        player.sprite.rotation = player.deltaHeading - Math.PI/2;
+        player.sprite.rotation = player.heading - Math.PI/2;
 
         var now = Date.now();
+        player.thrustParticles.updateSpawnPos(player.deltaX, player.deltaY);
+        player.thrustParticles.rotate(player.sprite.rotation*TO_DEGREE);
         player.thrustParticles.update((now - elapsed) * 0.001);
         elapsed = now;
     });
@@ -133,11 +136,14 @@ socket.on("join", function(data, isLocalPlayer) {
     client.sprite = PIXI.Sprite.fromImage("assets/images/ship.png");
     
     client.thrustParticles = new PIXI.particles.Emitter(
+    	
+    	stage,
+
     	[PIXI.Texture.fromImage("assets/images/bullet.png")],
 
 	    {
 	        alpha: {
-	            start: 0.8,
+	            start: 1.0,
 	            end: 0.1
 	        },
 	        scale: {
@@ -150,33 +156,33 @@ socket.on("join", function(data, isLocalPlayer) {
 	        },
 	        speed: {
 	            start: 200,
-	            end: 100
+	            end: 0
 	        },
 	        startRotation: {
-	            min: 0,
-	            max: 360
+	            min: (client.heading) - 10, 
+	            max: (client.heading) + 10
 	        },
 	        rotationSpeed: {
 	            min: 0,
 	            max: 0
 	        },
 	        lifetime: {
-	            min: 0.5,
-	            max: 0.5
+	            min: 1,
+	            max: 1
 	        },
 	        frequency: 0.008,
-	        emitterLifetime: 0.31,
+	        emitterLifetime: 0,
 	        maxParticles: 1000,
 	        pos: {
-	            x: 100,
-	            y: 100
+	            x: client.x,
+	            y: client.y
 	        },
 	        addAtBack: false,
 	        spawnType: "circle",
 	        spawnCircle: {
 	            x: 0,
 	            y: 0,
-	            r: 10
+	            r: 0
         	}
     	}
 	);
