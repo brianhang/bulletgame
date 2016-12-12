@@ -45,6 +45,15 @@ function initialize() {
 // Call when a frame needs to be rendered
 function render() {
 	requestAnimationFrame(render);
+
+	players.map(function(player) {
+		player.deltaX += (player.x - (player.deltaX || player.x)) * 0.16;
+		player.deltaY += (player.y - (player.deltaY || player.y)) * 0.16;
+
+		player.sprite.x = player.deltaX;
+		player.sprite.y = player.deltaY;
+	});
+
 	renderer.render(stage);
 }
 
@@ -96,6 +105,10 @@ socket.on("join", function(data, isLocalPlayer) {
 
 	// Copy information from server
 	client.id = data.id;
+	client.x = data.x;
+	client.y = data.y;
+	client.deltaX = client.x;
+	client.deltaY = client.y;
 	client.heading = Math.random()*360//data.heading || 0;
 	client.thrust = data.thrust || 0;
 
@@ -134,9 +147,6 @@ socket.on("move", function(id, x, y) {
 
 	other.x = x;
 	other.y = y;
-
-	other.sprite.x = other.x;
-	other.sprite.y = other.y;
 })
 
 // Called when a player changes angles
