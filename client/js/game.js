@@ -125,8 +125,8 @@ socket.on("join", function(data, isLocalPlayer) {
     client.y = data.y;
     client.deltaX = client.x;
     client.deltaY = client.y;
-    client.heading = Math.random()*360//data.heading || 0;
-    client.deltaHeading = client.heading;
+    client.heading = 0//Math.random()*360//data.heading || 0;
+    client.deltaHeading = client.heading; 
     client.thrust = data.thrust || 0;
 
     // Set 
@@ -159,8 +159,8 @@ socket.on("join", function(data, isLocalPlayer) {
 	            end: 0
 	        },
 	        startRotation: {
-	            min: (client.heading) - 10, 
-	            max: (client.heading) + 10
+	            min: 60,//(client.deltaHeading) - 10, 
+	            max: 120//(client.deltaHeading) + 10
 	        },
 	        rotationSpeed: {
 	            min: 0,
@@ -170,7 +170,7 @@ socket.on("join", function(data, isLocalPlayer) {
 	            min: 1,
 	            max: 1
 	        },
-	        frequency: 0.008,
+	        frequency: 0.02,
 	        emitterLifetime: 0,
 	        maxParticles: 1000,
 	        pos: {
