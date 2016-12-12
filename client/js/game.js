@@ -103,6 +103,9 @@ socket.on("join", function(data, isLocalPlayer) {
 
     if (isLocalPlayer) {
         client = player;
+    } else if (players[data.id]) {
+        client = players[data.id];
+        console.log("Duplicate" + data.id);
     } else {
         client = new Player(-1, 0, 0);
     }

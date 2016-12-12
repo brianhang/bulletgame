@@ -35,7 +35,7 @@ io.on("connection", function(socket) {
     players[id] = player;
     
     // Remove the player from the player list when disconnecting.
-    socket.on("disconnect", function() {
+    socket.once("disconnect", function() {
         io.emit("leave", id);
         delete players[id];
 
