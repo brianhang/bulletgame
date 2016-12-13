@@ -10,6 +10,8 @@ var players = [];
 var stage;
 var renderer;
 
+var POLL_DELAY = 50;
+
 $(document).ready(function() {
     initialize();
 
@@ -107,7 +109,7 @@ $(document).mousemove(function(event) {
 
 
 // Called when a player joins a game
-socket.on("join", function(data, isLocalPlayer) {
+function playerJoined(data, isLocalPlayer) {
     var client;
 
     if (isLocalPlayer) {
@@ -203,8 +205,19 @@ socket.on("join", function(data, isLocalPlayer) {
     // Put sprite is in middle of position
     client.sprite.anchor.set(0.5, 0.5);
 
+    stage.addChild(client.sprite);
+}
 
-    stage.addChildAt(client.sprite);
+socket.on("join", function(data, isLocalPlayer) {
+    function pollStage() {
+        if (stage !== undefined) {
+            playerJoined(data, isLocalPlayer);
+        } else {
+            setTimeout(playerJoined, POLL_DELAY, data, isLocalPlayer);
+        }
+    }
+
+    setTimeout(playerJoined, POLL_DELAY, data, isLocalPlayer);
 });
 
 // Called when a player leaves the game
@@ -212,7 +225,7 @@ socket.on("leave", function(id) {
     // Delete player's sprite and the player itself
     stage.removeChild(players[id].sprite);
     players[id].thrustParticles.destroy();
-    
+
     delete players[id];
 })
 
