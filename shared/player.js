@@ -61,4 +61,7 @@ class Player {
     }
 }
 
-exports.Player = Player
+// Only export on the server code.
+if (typeof(window) === "undefined") {
+    exports.Player = Player
+}

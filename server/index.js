@@ -15,7 +15,9 @@ var THRUST_STEP_UP = 0.25
 var THRUST_STEP_DOWN = 0.1
 
 // Start the webserver for the game on localhost:8080
-app.use(express.static(__dirname + "/../client"))
+app.use(express.static(__dirname + "/../client"));
+app.use("/js/shared", express.static(__dirname + "/../shared"));
+
 http.listen(8080)
 
 var players = [];
