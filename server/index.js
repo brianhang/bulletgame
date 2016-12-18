@@ -33,7 +33,7 @@ io.on("connection", function(socket) {
 
     var player = new Player(id, Math.random() * 256, Math.random() * 256);
     player.socket = socket;
-
+    player.joinTime = (new Date()).getSeconds();
     players[id] = player;
     
     // Remove the player from the player list when disconnecting.

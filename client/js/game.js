@@ -50,23 +50,29 @@ var elapsed = Date.now();
 
 // Call when a frame needs to be rendered
 function render() {
+    var halfScrW = $(document).width() * 0.5;
+    var halfScrH = $(document).height() * 0.5;
+
     requestAnimationFrame(render);
     var now = Date.now();
 
-    players.map(function(player) {
-        player.deltaX += (player.x - player.deltaX) * 0.16;
-        player.deltaY += (player.y - player.deltaY) * 0.16;
-        player.deltaHeading = (player.deltaHeading - player.heading) % Math.PI*2
+    players.map(function(client) {
+        client.deltaX += (client.x - client.deltaX) * 0.16;
+        client.deltaY += (client.y - client.deltaY) * 0.16;
+        client.deltaHeading = (client.deltaHeading - client.heading) % Math.PI*2
 
-        player.sprite.x = player.deltaX;
-        player.sprite.y = player.deltaY;
-        player.sprite.rotation = player.heading - Math.PI/2;
+        client.sprite.x = client.deltaX;
+        client.sprite.y = client.deltaY;
+        client.sprite.rotation = client.heading - Math.PI/2;
 
-        player.thrustParticles.updateSpawnPos(player.deltaX, player.deltaY);
-        player.thrustParticles.update((now - elapsed) * 0.001);
+        client.thrustParticles.updateSpawnPos(client.sprite.x, client.sprite.y);
+        client.thrustParticles.update((now - elapsed) * 0.001);
     });
 
     elapsed = now;
+
+    stage.pivot.x = player.sprite.x - halfScrW;
+    stage.pivot.y = player.sprite.y - halfScrH;
 
     renderer.render(stage);
 }
@@ -96,9 +102,12 @@ function onKeyUp(keyEvent) {
 $(document).mousemove(function(event) {
     // Check if player sprite exists to turn
     if (player.sprite !== undefined) {
+        var halfScrW = $(document).width() * 0.5;
+        var halfScrH = $(document).height() * 0.5;
+
         // Get the angle of mouse from the sprite   
-        var angle = Math.atan2(player.sprite.position.y - event.pageY, 
-                               player.sprite.position.x - event.pageX);
+        var angle = Math.atan2(halfScrH - event.pageY, 
+                               halfScrW - event.pageX);
 
         if (Math.abs(angle - player.getHeading()) > ANGLE_STEP) {
             // Send heading information to serverA
