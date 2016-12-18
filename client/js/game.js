@@ -49,13 +49,16 @@ function initialize() {
 var elapsed = Date.now();
 
 // Call when a frame needs to be rendered
-function render() {
-    var halfScrW = $(document).width() * 0.5;
-    var halfScrH = $(document).height() * 0.5;
-
+function render() {    
     requestAnimationFrame(render);
+
+    if (player.sprite === undefined) {
+        return;
+    }
+    
     var now = Date.now();
 
+    // Update each player's position.
     players.map(function(client) {
         client.deltaX += (client.x - client.deltaX) * 0.16;
         client.deltaY += (client.y - client.deltaY) * 0.16;
@@ -69,10 +72,12 @@ function render() {
         client.thrustParticles.update((now - elapsed) * 0.001);
     });
 
+    // Get when this frame was drawn.
     elapsed = now;
 
-    stage.pivot.x = player.sprite.x - halfScrW;
-    stage.pivot.y = player.sprite.y - halfScrH;
+    // Center the stage to the player's sprite.
+    stage.pivot.x = player.sprite.x - $(document).width() * 0.5;
+    stage.pivot.y = player.sprite.y - $(document).height() * 0.5;
 
     renderer.render(stage);
 }
